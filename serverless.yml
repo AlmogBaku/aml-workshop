@@ -1,0 +1,25 @@
+service: aml-workshop-lambda-fastapi
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  logs:
+    httpApi: true
+  stage: ${env:STAGE}
+
+functions:
+  app:
+    handler: main
+    events:
+      - httpApi:
+          path: '*'
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+
+plugins:
+  - serverless-python-requirements
+  - serverless-dotenv-plugin
