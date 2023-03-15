@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lambda-fastapi
+  labels:
+    app: lambda-fastapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lambda-fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+        - image: localhost:5000/lambda-fastapi:latest
+          imagePullPolicy: Always
+          name: fastapi
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /docs
+            initialDelaySeconds: 15
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /docs
+            initialDelaySeconds: 15
+            periodSeconds: 15
